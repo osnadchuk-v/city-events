@@ -1,9 +1,9 @@
 import { Issue } from '@/db/schema';
-import { formatRelativeTime } from '@/lib/utils';
 import { Priority, Status } from '@/lib/types';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/Card';
 import Badge from './ui/Badge';
+import TimeAgo from '@/app/components/RelativeTime';
 
 interface IssueCardProps {
   issue: Issue;
@@ -53,7 +53,9 @@ export default function IssueCard({ issue }: IssueCardProps) {
             <Badge priority={priority as Priority}>{getPriorityLabel(priority)}</Badge>
           </div>
         </CardContent>
-        <CardFooter className="text-xs text-gray-500">{formatRelativeTime(new Date(createdAt))}</CardFooter>
+        <CardFooter className="text-xs text-gray-500">
+          <TimeAgo date={createdAt}></TimeAgo>
+        </CardFooter>
       </Card>
     </Link>
   );

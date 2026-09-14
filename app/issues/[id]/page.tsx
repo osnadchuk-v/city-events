@@ -1,5 +1,4 @@
 import { getIssue } from '@/lib/dal';
-import { formatRelativeTime } from '@/lib/utils';
 import { Priority, Status } from '@/lib/types';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -7,6 +6,7 @@ import Badge from '@/app/components/ui/Badge';
 import Button from '@/app/components/ui/Button';
 import { ArrowLeftIcon, Edit2Icon } from 'lucide-react';
 import DeleteIssueButton from '../../components/DeleteIssueButton';
+import TimeAgo from '@/app/components/RelativeTime';
 
 const IssuePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
@@ -76,9 +76,13 @@ const IssuePage = async ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="flex flex-wrap gap-3 mb-6">
           <Badge status={status as Status}>{getStatusLabel(status)}</Badge>
           <Badge priority={priority as Priority}>{getPriorityLabel(priority)}</Badge>
-          <div className="text-sm text-gray-800">Created {formatRelativeTime(new Date(createdAt))}</div>
+          <div className="text-sm text-gray-800">
+            Created <TimeAgo date={createdAt} />
+          </div>
           {updatedAt !== createdAt && (
-            <div className="text-sm text-gray-800">Updated {formatRelativeTime(new Date(updatedAt))}</div>
+            <div className="text-sm text-gray-800">
+              Updated <TimeAgo date={updatedAt} />
+            </div>
           )}
         </div>
 
@@ -108,7 +112,9 @@ const IssuePage = async ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
           <div>
             <p className="text-sm font-medium text-gray-800 mb-1">Created</p>
-            <p>{formatRelativeTime(new Date(createdAt))}</p>
+            <p>
+              <TimeAgo date={createdAt} />
+            </p>
           </div>
         </div>
       </div>

@@ -19,6 +19,7 @@ export default function SignUpPage() {
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
     async (prevState: ActionResponse, formData: FormData) => {
+      console.log('Form submitted', formData);
       try {
         const result = await signUp(formData);
 
@@ -29,6 +30,7 @@ export default function SignUpPage() {
 
         return result;
       } catch (err) {
+        console.log(err);
         return {
           success: false,
           message: (err as Error).message || 'An error occurred',
@@ -39,6 +41,7 @@ export default function SignUpPage() {
     intialState,
   );
 
+  console.log(state);
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50 dark:bg-[#121212]">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

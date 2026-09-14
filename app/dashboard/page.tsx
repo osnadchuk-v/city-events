@@ -3,9 +3,9 @@ import Link from 'next/link';
 import Button from '../components/ui/Button';
 import { PlusIcon } from 'lucide-react';
 import Badge from '../components/ui/Badge';
-import { formatRelativeTime } from '@/lib/utils';
 import { Priority, Status } from '@/lib/types';
 import { ISSUE_PRIORITY, ISSUE_STATUS } from '@/db/schema';
+import TimeAgo from '@/app/components/RelativeTime';
 
 export default async function DashboardPage() {
   const issues = await getIssues();
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
                     </Badge>
                   </div>
                   <div className="col-span-3 text-sm text-gray-500 dark:text-gray-50">
-                    {formatRelativeTime(new Date(issue.createdAt))}
+                    <TimeAgo date={issue.createdAt} />
                   </div>
                 </div>
               </Link>
