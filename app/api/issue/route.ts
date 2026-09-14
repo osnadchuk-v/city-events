@@ -1,6 +1,6 @@
 import { db } from '@/db';
 import { issues } from '@/db/schema';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async () => {
   try {
@@ -12,7 +12,7 @@ export const GET = async () => {
   }
 };
 
-export const POST = async (req: NextResponse) => {
+export const POST = async (req: NextRequest) => {
   try {
     const [newIssue] = await db
       .insert(issues)
