@@ -1,12 +1,8 @@
-import Link from 'next/link'
-import { Timestamp } from '../components/Timestamp'
-import Button from '../components/ui/Button'
+import Link from 'next/link';
+import { Timestamp } from '../components/Timestamp';
+import Button from '../components/ui/Button';
 
-export default async function MarketingLayout({
-                                  children,
-                                }: {
-  children: React.ReactNode
-}) {
+export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-gray-200 dark:border-dark-border-subtle bg-white dark:bg-dark-base">
@@ -16,22 +12,13 @@ export default async function MarketingLayout({
               Mode
             </Link>
             <nav className="hidden md:flex gap-6">
-              <Link
-                href="/features"
-                className="text-sm font-medium hover:text-purple-600"
-              >
+              <Link href="/features" className="text-sm font-medium hover:text-purple-600">
                 Features
               </Link>
-              <Link
-                href="/pricing"
-                className="text-sm font-medium hover:text-purple-600"
-              >
+              <Link href="/pricing" className="text-sm font-medium hover:text-purple-600">
                 Pricing
               </Link>
-              <Link
-                href="/faq"
-                className="text-sm font-medium hover:text-purple-600"
-              >
+              <Link href="/faq" className="text-sm font-medium hover:text-purple-600">
                 FAQ
               </Link>
             </nav>
@@ -56,34 +43,23 @@ export default async function MarketingLayout({
           <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
             <div>
               <h3 className="text-lg font-semibold mb-4">Mode</h3>
-              <p className="text-sm text-gray-600">
-                A modern project management tool built with Next.js.
-              </p>
+              <p className="text-sm text-gray-600">A modern project management tool built with Next.js.</p>
             </div>
             <div>
               <h3 className="text-sm font-semibold mb-4">Product</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link
-                    href="/features"
-                    className="text-sm text-gray-600 hover:text-purple-600"
-                  >
+                  <Link href="/features" className="text-sm text-gray-600 hover:text-purple-600">
                     Features
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/pricing"
-                    className="text-sm text-gray-600 hover:text-purple-600"
-                  >
+                  <Link href="/pricing" className="text-sm text-gray-600 hover:text-purple-600">
                     Pricing
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/faq"
-                    className="text-sm text-gray-600 hover:text-purple-600"
-                  >
+                  <Link href="/faq" className="text-sm text-gray-600 hover:text-purple-600">
                     FAQ
                   </Link>
                 </li>
@@ -93,10 +69,7 @@ export default async function MarketingLayout({
               <h3 className="text-sm font-semibold mb-4">Resources</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link
-                    href="/docs"
-                    className="text-sm text-gray-600 hover:text-purple-600"
-                  >
+                  <Link href="/docs" className="text-sm text-gray-600 hover:text-purple-600">
                     Documentation
                   </Link>
                 </li>
@@ -116,10 +89,7 @@ export default async function MarketingLayout({
               <h3 className="text-sm font-semibold mb-4">Legal</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link
-                    href="/terms"
-                    className="text-sm text-gray-600 hover:text-purple-600"
-                  >
+                  <Link href="/terms" className="text-sm text-gray-600 hover:text-purple-600">
                     Terms of Service
                   </Link>
                 </li>
@@ -134,5 +104,5 @@ export default async function MarketingLayout({
         </div>
       </footer>
     </div>
-  )
+  );
 }

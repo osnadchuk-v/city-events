@@ -1,9 +1,9 @@
-import { getCurrentUser } from '@/lib/dal'
-import Button from './ui/Button'
-import Link from 'next/link'
+import { getCurrentUser } from '@/lib/dal';
+import Button from './ui/Button';
+import Link from 'next/link';
 
 const DashboardButton = async () => {
-  const user = await getCurrentUser()
+  const user = await getCurrentUser();
   return (
     <>
       {user ? (
@@ -21,7 +21,7 @@ const DashboardButton = async () => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export default DashboardButton
+export default DashboardButton;

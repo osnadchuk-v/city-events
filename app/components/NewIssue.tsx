@@ -1,15 +1,15 @@
-import { redirect } from 'next/navigation'
-import IssueForm from './IssueForm'
-import { getCurrentUser } from '@/lib/dal'
+import { redirect } from 'next/navigation';
+import IssueForm from './IssueForm';
+import { getCurrentUser } from '@/lib/dal';
 
 const NewIssue = async () => {
-  const user = await getCurrentUser()
+  const user = await getCurrentUser();
 
   if (!user) {
-    redirect('/signin')
+    redirect('/signin');
   }
 
-  return <IssueForm userId={user.id} />
-}
+  return <IssueForm userId={user.id} />;
+};
 
-export default NewIssue
+export default NewIssue;

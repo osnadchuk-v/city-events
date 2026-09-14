@@ -1,101 +1,77 @@
-'use client'
+'use client';
 
-import { useActionState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Issue, ISSUE_STATUS, ISSUE_PRIORITY } from '@/db/schema'
-import Button from './ui/Button'
-import {
-  Form,
-  FormGroup,
-  FormLabel,
-  FormInput,
-  FormTextarea,
-  FormSelect,
-  FormError,
-} from './ui/Form'
-import { createIssue, updateIssue, ActionResponse } from '@/app/actions/issues'
+import { useActionState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Issue, ISSUE_PRIORITY, ISSUE_STATUS } from '@/db/schema';
+import Button from './ui/Button';
+import { Form, FormError, FormGroup, FormInput, FormLabel, FormSelect, FormTextarea } from './ui/Form';
+import { ActionResponse, createIssue, updateIssue } from '@/app/actions/issues';
 
 interface IssueFormProps {
-  issue?: Issue
-  userId: string
-  isEditing?: boolean
+  issue?: Issue;
+  userId: string;
+  isEditing?: boolean;
 }
 
 const initialState: ActionResponse = {
   success: false,
   message: '',
   errors: undefined,
-}
+};
 
-export default function IssueForm({
-  issue,
-  userId,
-  isEditing = false,
-}: IssueFormProps) {
-  const router = useRouter()
+export default function IssueForm({ issue, userId, isEditing = false }: IssueFormProps) {
+  const router = useRouter();
 
   // Use useActionState hook for the form submission action
-  const [state, formAction, isPending] = useActionState<
-    ActionResponse,
-    FormData
-  >(async (prevState: ActionResponse, formData: FormData) => {
-    // Extract data from form
-    const data = {
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-      status: formData.get('status') as
-        | 'backlog'
-        | 'todo'
-        | 'in_progress'
-        | 'done',
-      priority: formData.get('priority') as 'low' | 'medium' | 'high',
-      userId,
-    }
+  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
+    async (prevState: ActionResponse, formData: FormData) => {
+      // Extract data from form
+      const data = {
+        title: formData.get('title') as string,
+        description: formData.get('description') as string,
+        status: formData.get('status') as 'backlog' | 'todo' | 'in_progress' | 'done',
+        priority: formData.get('priority') as 'low' | 'medium' | 'high',
+        userId,
+      };
 
-    try {
-      // Call the appropriate action based on whether we're editing or creating
-      const result = isEditing
-        ? await updateIssue(Number(issue!.id), data)
-        : await createIssue(data)
+      try {
+        // Call the appropriate action based on whether we're editing or creating
+        const result = isEditing ? await updateIssue(Number(issue!.id), data) : await createIssue(data);
 
-      // Handle successful submission
-      if (result.success) {
-        router.refresh()
-        if (!isEditing) {
-          router.push('/dashboard')
+        // Handle successful submission
+        if (result.success) {
+          router.refresh();
+          if (!isEditing) {
+            router.push('/dashboard');
+          }
         }
-      }
 
-      return result
-    } catch (err) {
-      return {
-        success: false,
-        message: (err as Error).message || 'An error occurred',
-        errors: undefined,
+        return result;
+      } catch (err) {
+        return {
+          success: false,
+          message: (err as Error).message || 'An error occurred',
+          errors: undefined,
+        };
       }
-    }
-  }, initialState)
+    },
+    initialState,
+  );
 
   const statusOptions = Object.values(ISSUE_STATUS).map(({ label, value }) => ({
     label,
     value,
-  }))
+  }));
 
-  const priorityOptions = Object.values(ISSUE_PRIORITY).map(
-    ({ label, value }) => ({
-      label,
-      value,
-    })
-  )
+  const priorityOptions = Object.values(ISSUE_PRIORITY).map(({ label, value }) => ({
+    label,
+    value,
+  }));
 
   return (
     <Form action={formAction}>
       {state?.message && (
-        <FormError
-          className={`mb-4 ${
-            state.success ? 'bg-green-100 text-green-800 border-green-300' : ''
-          }`}
-        >
+        <FormError className={`mb-4 ${state.success ? 'bg-green-100 text-green-800 border-green-300' : ''}`}>
           {state.message}
         </FormError>
       )}
@@ -181,12 +157,7 @@ export default function IssueForm({
       </div>
 
       <div className="flex justify-end gap-2 mt-6">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => router.back()}
-          disabled={isPending}
-        >
+        <Button type="button" variant="ghost" onClick={() => router.back()} disabled={isPending}>
           Cancel
         </Button>
         <Button type="submit" isLoading={isPending}>
@@ -194,5 +165,5 @@ export default function IssueForm({
         </Button>
       </div>
     </Form>
-  )
+  );
 }

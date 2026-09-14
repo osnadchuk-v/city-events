@@ -1,11 +1,7 @@
-import {PropsWithChildren} from 'react';
+import { PropsWithChildren } from 'react';
 
-const Layout = ({children}: PropsWithChildren) => {
-  return (
-    <div>
-      {children}
-    </div>
-  );
+const Layout = ({ children }: PropsWithChildren) => {
+  return <div>{children}</div>;
 };
 
 export default Layout;
