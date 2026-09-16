@@ -2,7 +2,7 @@ import { getEvent } from '@/lib/dal';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Button from '@/app/components/ui/Button';
-import { ArrowLeftIcon, Edit2Icon, MapPinIcon, CalendarIcon, ClockIcon, LinkIcon } from 'lucide-react';
+import { ArrowLeftIcon, CalendarIcon, ClockIcon, Edit2Icon, LinkIcon, MapPinIcon } from 'lucide-react';
 import TimeAgo from '@/app/components/RelativeTime';
 import { EVENT_CATEGORIES, EVENT_STATUSES } from '@/db/schema';
 import { EventLocation, EventOrganizer, EventPricing } from '@/lib/types';
@@ -47,12 +47,9 @@ const EventPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4 md:p-8">
+    <div className="max-w-7xl w-full mr-auto ml-auto p-4 md:p-8">
       {/* Back */}
-      <Link
-        href="/dashboard"
-        className="inline-flex items-center text-sm text-gray-400 hover:text-gray-200 mb-6"
-      >
+      <Link href="/dashboard" className="inline-flex items-center text-sm text-gray-400 hover:text-gray-200 mb-6">
         <ArrowLeftIcon size={16} className="mr-1" />
         Назад
       </Link>
@@ -63,9 +60,7 @@ const EventPage = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="flex items-center gap-2 mb-2">
             <span className="text-2xl">{categoryMeta.icon}</span>
             <span className="text-xs text-purple-400 font-medium">{categoryMeta.label}</span>
-            <span
-              className={`text-xs px-2 py-0.5 rounded-full border font-medium ${statusColors[status]}`}
-            >
+            <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${statusColors[status]}`}>
               {statusMeta.label}
             </span>
           </div>
@@ -73,7 +68,7 @@ const EventPage = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Link href={`/events/${id}/edit`}>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="flex items-center gap-1">
               <Edit2Icon size={14} className="mr-1" />
               Редагувати
             </Button>
@@ -92,14 +87,11 @@ const EventPage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
       {/* Main content */}
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 mb-4 space-y-5">
-
         {/* Date & time */}
         <div className="flex items-start gap-3 text-gray-300">
           <CalendarIcon size={18} className="mt-0.5 text-purple-400 shrink-0" />
           <div>
-            <p className="font-medium text-white">
-              {format(new Date(startDateTime), 'd MMMM yyyy', { locale: uk })}
-            </p>
+            <p className="font-medium text-white">{format(new Date(startDateTime), 'd MMMM yyyy', { locale: uk })}</p>
             <p className="text-sm text-gray-400 flex items-center gap-1">
               <ClockIcon size={13} />
               {format(new Date(startDateTime), 'HH:mm')}
@@ -182,7 +174,12 @@ const EventPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <div>
               <p className="text-gray-500 mb-1">Організатор</p>
               {org.url ? (
-                <a href={org.url} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300">
+                <a
+                  href={org.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-400 hover:text-purple-300"
+                >
                   {org.name}
                 </a>
               ) : (
