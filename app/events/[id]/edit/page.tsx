@@ -1,5 +1,5 @@
-const EditEventPage = () => {
-  return <div>Edit Event Page</div>;
+const Page = () => {
+  return <div>edit page</div>;
 };
 
-export default EditEventPage;
+export default Page;

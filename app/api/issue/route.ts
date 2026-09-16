@@ -1,27 +1,29 @@
 import { db } from '@/db';
-import { issues } from '@/db/schema';
+import { events } from '@/db/schema';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async () => {
   try {
-    const issues = await db.query.issues.findMany({});
-    return NextResponse.json({ data: { issues } });
+    const result = await db.query.events.findMany({
+      orderBy: (e, { desc }) => [desc(e.createdAt)],
+    });
+    return NextResponse.json({ data: result });
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ error: 'nah' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 });
   }
 };
 
 export const POST = async (req: NextRequest) => {
   try {
-    const [newIssue] = await db
-      .insert(issues)
+    const [newEvent] = await db
+      .insert(events)
       .values(await req.json())
       .returning();
 
-    return NextResponse.json({ data: newIssue });
+    return NextResponse.json({ data: newEvent });
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ error: 'nah' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create event' }, { status: 500 });
   }
 };

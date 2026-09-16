@@ -1,15 +1,15 @@
 import { redirect } from 'next/navigation';
-import IssueForm from './IssueForm';
+import EventForm from './EventForm';
 import { getCurrentUser } from '@/lib/dal';
 
-const NewIssue = async () => {
+const NewEvent = async () => {
   const user = await getCurrentUser();
 
   if (!user) {
     redirect('/signin');
   }
 
-  return <IssueForm userId={user.id} />;
+  return <EventForm userId={user.id} />;
 };
 
-export default NewIssue;
+export default NewEvent;

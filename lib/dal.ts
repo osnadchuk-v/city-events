@@ -2,12 +2,10 @@ import { db } from '@/db';
 import { getSession } from './auth';
 import { eq } from 'drizzle-orm';
 import { cache } from 'react';
-import { issues, users } from '@/db/schema';
-import { mockDelay } from './utils';
+import { events, users } from '@/db/schema';
 import { cacheTag } from 'next/cache';
 
 export const getCurrentUser = cache(async () => {
-  await mockDelay(1000);
   const session = await getSession();
   if (!session) {
     return null;
@@ -15,7 +13,6 @@ export const getCurrentUser = cache(async () => {
 
   try {
     const results = await db.select().from(users).where(eq(users.id, session.userId));
-
     return results[0] || null;
   } catch (e) {
     console.error(e);
@@ -25,47 +22,42 @@ export const getCurrentUser = cache(async () => {
 
 export const getUserByEmail = async (email: string) => {
   try {
-    const user = await db.query.users.findFirst({
+    return await db.query.users.findFirst({
       where: eq(users.email, email),
     });
-
-    return user;
   } catch (e) {
     console.error(e);
     return null;
   }
 };
 
-export async function getIssues() {
+export async function getEvents() {
   'use cache';
-  cacheTag('issues');
+  cacheTag('events');
   try {
-    await mockDelay(1000);
-    const result = await db.query.issues.findMany({
+    const result = await db.query.events.findMany({
       with: {
         user: true,
       },
-      orderBy: (issues, { desc }) => [desc(issues.createdAt)],
+      orderBy: (e, { desc }) => [desc(e.createdAt)],
     });
-
     return result;
   } catch (error) {
-    console.error('Error fetching issues:', error);
-    throw new Error('Failed to fetch issues');
+    console.error('Error fetching events:', error);
+    throw new Error('Failed to fetch events');
   }
 }
 
-export const getIssue = async (id: number) => {
+export const getEvent = async (id: string) => {
   try {
-    await mockDelay(700);
-    const issue = await db.query.issues.findFirst({
-      where: eq(issues.id, id),
+    const event = await db.query.events.findFirst({
+      where: eq(events.id, id),
       with: {
         user: true,
+        sources: true,
       },
     });
-
-    return issue;
+    return event;
   } catch (e) {
     console.error(e);
     return null;

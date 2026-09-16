@@ -16,7 +16,7 @@ export default function Navigation() {
 
       <nav className="flex-1 flex flex-col space-y-1">
         <NavLink href="/dashboard" icon={<HomeIcon size={20} />} label="Dashboard" />
-        <NavLink href="/issues/new" icon={<PlusIcon size={20} />} label="New Issue" />
+        <NavLink href="/events/new" icon={<PlusIcon size={20} />} label="New Event" />
       </nav>
 
       <div className="pt-4 border-t border-gray-200 dark:border-dark-border-subtle">

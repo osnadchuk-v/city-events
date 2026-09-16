@@ -5,7 +5,7 @@ import Button from '../components/ui/Button';
 export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-gray-200 dark:border-dark-border-subtle bg-white dark:bg-dark-base">
+      <header className="border-b border-gray-900 dark:border-dark-border-subtle bg-gray-800 dark:bg-dark-base">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-8">
             <Link href="/" className="text-xl font-bold">
@@ -69,7 +69,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
               <h3 className="text-sm font-semibold mb-4">Resources</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/docs" className="text-sm text-gray-600 hover:text-purple-600">
+                  <Link href="/.docs" className="text-sm text-gray-600 hover:text-purple-600">
                     Documentation
                   </Link>
                 </li>

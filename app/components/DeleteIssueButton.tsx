@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import Button from './ui/Button';
 import { Trash2Icon } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { deleteIssue } from '@/app/actions/issues';
+import { deleteEvent } from '@/app/actions/events';
 
 interface DeleteIssueButtonProps {
-  id: number;
+  id: string;
 }
 
 export default function DeleteIssueButton({ id }: DeleteIssueButtonProps) {
@@ -19,30 +19,30 @@ export default function DeleteIssueButton({ id }: DeleteIssueButtonProps) {
   const handleDelete = async () => {
     startTransition(async () => {
       try {
-        const result = await deleteIssue(id);
+        const result = await deleteEvent(id);
 
         if (!result.success) {
-          throw new Error(result.error || 'Failed to delete issue');
+          throw new Error(result.error || 'Не вдалося видалити подію');
         }
 
-        toast.success('Issue deleted successfully');
+        toast.success('Подію видалено');
         router.push('/dashboard');
         router.refresh();
       } catch (error) {
-        toast.error('Failed to delete issue');
-        console.error('Error deleting issue:', error);
+        toast.error('Помилка при видаленні');
+        console.error('Error deleting event:', error);
       }
     });
   };
 
   if (showConfirm) {
     return (
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-2">
         <Button variant="outline" size="sm" onClick={() => setShowConfirm(false)} disabled={isPending}>
-          Cancel
+          Скасувати
         </Button>
         <Button variant="danger" size="sm" onClick={handleDelete} isLoading={isPending}>
-          Delete
+          Видалити
         </Button>
       </div>
     );
@@ -51,8 +51,8 @@ export default function DeleteIssueButton({ id }: DeleteIssueButtonProps) {
   return (
     <Button variant="outline" size="sm" onClick={() => setShowConfirm(true)}>
       <span className="flex items-center">
-        <Trash2Icon size={16} className="mr-1" />
-        Delete
+        <Trash2Icon size={14} className="mr-1" />
+        Видалити
       </span>
     </Button>
   );

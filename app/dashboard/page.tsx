@@ -1,74 +1,81 @@
-import { getIssues } from '@/lib/dal';
+import { getEvents } from '@/lib/dal';
 import Link from 'next/link';
 import Button from '../components/ui/Button';
 import { PlusIcon } from 'lucide-react';
-import Badge from '../components/ui/Badge';
-import { Priority, Status } from '@/lib/types';
-import { ISSUE_PRIORITY, ISSUE_STATUS } from '@/db/schema';
+import { EVENT_CATEGORIES, EVENT_STATUSES } from '@/db/schema';
 import TimeAgo from '@/app/components/RelativeTime';
+import { format } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
 export default async function DashboardPage() {
-  const issues = await getIssues();
+  const events = await getEvents();
 
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Issues</h1>
-        <Link href="/issues/new">
+        <h1 className="text-2xl font-bold text-white">Мої події</h1>
+        <Link href="/events/new">
           <Button>
             <span className="flex items-center">
               <PlusIcon size={18} className="mr-2" />
-              New Issue
+              Створити подію
             </span>
           </Button>
         </Link>
       </div>
 
-      {issues.length > 0 ? (
-        <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-dark-border-default bg-gray-800 dark:bg-dark-high shadow-sm">
-          {/* Header row */}
-          <div className="grid grid-cols-12 gap-4 px-6 py-3 text-sm font-medium text-gray-500 dark:text-gray-50 bg-gray-800 dark:bg-dark-elevated border-b border-gray-200 dark:border-dark-border-default">
-            <div className="col-span-5">Title</div>
-            <div className="col-span-2">Status</div>
-            <div className="col-span-2">Priority</div>
-            <div className="col-span-3">Created</div>
+      {events.length > 0 ? (
+        <div className="overflow-hidden rounded-lg border border-gray-700 bg-gray-800 shadow-sm">
+          {/* Header */}
+          <div className="grid grid-cols-12 gap-4 px-6 py-3 text-sm font-medium text-gray-400 bg-gray-800 border-b border-gray-700">
+            <div className="col-span-5">Назва</div>
+            <div className="col-span-2">Категорія</div>
+            <div className="col-span-2">Статус</div>
+            <div className="col-span-3">Дата</div>
           </div>
 
-          {/* Issue rows */}
-          <div className="divide-y divide-gray-200 dark:divide-dark-border-default">
-            {issues.map((issue) => (
-              <Link
-                key={issue.id}
-                href={`/issues/${issue.id}`}
-                className="block hover:bg-gray-700 dark:hover:bg-dark-elevated text-gray-50 transition-colors"
-              >
-                <div className="grid grid-cols-12 gap-4 px-6 py-4 items-center">
-                  <div className="col-span-5 font-medium truncate">{issue.title}</div>
-                  <div className="col-span-2">
-                    <Badge status={issue.status as Status}>{ISSUE_STATUS[issue.status as Status].label}</Badge>
+          {/* Rows */}
+          <div className="divide-y divide-gray-700">
+            {events.map((event) => {
+              const cat = EVENT_CATEGORIES[event.category];
+              const st = EVENT_STATUSES[event.status];
+              const statusColors: Record<string, string> = {
+                active: 'text-green-400',
+                cancelled: 'text-red-400',
+                postponed: 'text-yellow-400',
+                finished: 'text-gray-400',
+              };
+
+              return (
+                <Link
+                  key={event.id}
+                  href={`/events/${event.id}`}
+                  className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-gray-700 transition-colors text-gray-200"
+                >
+                  <div className="col-span-5 font-medium truncate">{event.title}</div>
+                  <div className="col-span-2 text-sm text-gray-400">
+                    {cat.icon} {cat.label}
                   </div>
-                  <div className="col-span-2">
-                    <Badge priority={issue.priority as Priority}>
-                      {ISSUE_PRIORITY[issue.priority as Priority].label}
-                    </Badge>
+                  <div className={`col-span-2 text-sm font-medium ${statusColors[event.status]}`}>
+                    {st.label}
                   </div>
-                  <div className="col-span-3 text-sm text-gray-500 dark:text-gray-50">
-                    <TimeAgo date={issue.createdAt} />
+                  <div className="col-span-3 text-sm text-gray-500">
+                    {format(new Date(event.startDateTime), 'd MMM, HH:mm', { locale: uk })}
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-12 text-center border border-gray-200 dark:border-dark-border-default rounded-lg bg-white dark:bg-dark-high p-8">
-          <h3 className="text-lg font-medium mb-2">No issues found</h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">Get started by creating your first issue.</p>
-          <Link href="/issues/new">
+        <div className="flex flex-col items-center justify-center py-12 text-center border border-gray-700 rounded-lg bg-gray-800 p-8">
+          <h3 className="text-lg font-medium mb-2 text-white">Подій ще немає</h3>
+          <p className="text-gray-400 mb-6">Створіть першу подію прямо зараз.</p>
+          <Link href="/events/new">
             <Button>
               <span className="flex items-center">
                 <PlusIcon size={18} className="mr-2" />
-                Create Issue
+                Створити подію
               </span>
             </Button>
           </Link>

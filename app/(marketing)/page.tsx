@@ -16,8 +16,8 @@ export default async function LandingPage() {
               A minimal and elegant issue tracking tool for modern teams. Manage your projects with ease.
             </p>
             <div className="mt-10">
-              <Link href="/signup">
-                <Button size="lg">Get Started</Button>
+              <Link href="/dashboard">
+                <Button size="lg">Go to Dashboard</Button>
               </Link>
             </div>
           </div>
