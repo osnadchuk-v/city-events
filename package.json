@@ -14,8 +14,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.1",
     "@neondatabase/serverless": "^1.1.0",
     "bcrypt": "^6.0.0",
+    "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",

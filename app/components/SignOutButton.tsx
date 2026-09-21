@@ -17,10 +17,10 @@ export default function SignOutButton() {
     <button
       onClick={handleSignOut}
       disabled={isPending}
-      className="flex items-center w-full px-2 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+      className="flex items-center w-full px-2 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors"
     >
-      <LogOutIcon size={20} className="mr-2" />
-      <span>{isPending ? 'Signing out...' : 'Sign Out'}</span>
+      <LogOutIcon size={20} className="mr-3 text-gray-400" />
+      <span className="hidden md:inline">{isPending ? 'Pending...' : 'Sign out'}</span>
     </button>
   );
 }

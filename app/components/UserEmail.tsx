@@ -1,6 +1,6 @@
 import { getCurrentUser } from '@/lib/dal';
 import { UserIcon } from 'lucide-react';
-import SignOutButton from './SignOutButton';
+import UserNav from './UserNav';
 
 const UserEmail = async () => {
   const user = await getCurrentUser();
@@ -11,7 +11,7 @@ const UserEmail = async () => {
         <UserIcon size={20} className="text-gray-500 mr-2" />
         <span className="hidden md:inline text-sm text-gray-700 dark:text-gray-300 truncate">{user?.email}</span>
       </div>
-      <SignOutButton />
+      <UserNav />
     </div>
   );
 };

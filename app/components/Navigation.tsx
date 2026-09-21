@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { HomeIcon, LogInIcon, PlusIcon } from 'lucide-react';
-import UserEmail from './UserEmail';
+import { HomeIcon, PlusIcon } from 'lucide-react';
 import { Suspense } from 'react';
 import NavLink from './NavLink';
+import UserNav, { UserNavFallback } from '@/app/components/UserNav';
 
 export default function Navigation() {
   return (
@@ -20,8 +20,8 @@ export default function Navigation() {
       </nav>
 
       <div className="pt-4 border-t border-gray-200 dark:border-dark-border-subtle">
-        <Suspense fallback={<NavLink href="/signin" icon={<LogInIcon size={20} />} label="Sign In" />}>
-          <UserEmail />
+        <Suspense fallback={<UserNavFallback />}>
+          <UserNav />
         </Suspense>
       </div>
     </aside>

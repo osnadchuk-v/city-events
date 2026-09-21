@@ -11,6 +11,7 @@
 !.yarn/versions
 .idea
 .docs
+.dev.vars
 
 # testing
 /coverage
