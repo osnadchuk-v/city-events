@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -11,7 +12,7 @@ interface NavLinkProps {
   isActive?: boolean;
 }
 
-export default function NavLink({ href, icon, label, isActive }: NavLinkProps) {
+const NavLink = ({ href, icon, label, isActive }: NavLinkProps) => {
   const pathname = usePathname();
   return (
     <Link
@@ -27,4 +28,12 @@ export default function NavLink({ href, icon, label, isActive }: NavLinkProps) {
       <span className="hidden md:inline">{label}</span>
     </Link>
   );
-}
+};
+
+const SuspensedNavLink = (props: NavLinkProps) => (
+  <Suspense>
+    <NavLink {...props} />
+  </Suspense>
+);
+
+export default SuspensedNavLink;
