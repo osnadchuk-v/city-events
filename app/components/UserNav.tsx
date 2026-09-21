@@ -14,7 +14,7 @@ const UserNav = async () => {
         className="flex items-center px-2 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 rounded-md transition-colors"
       >
         <LogInIcon size={20} className="mr-3 text-gray-400" />
-        <span className="hidden md:inline">Sign in</span>
+        <span className="hidden md:inline">Увійти</span>
       </Link>
     );
   }
@@ -34,5 +34,5 @@ export default UserNav;
 
 // Fallback поки UserNav завантажується
 export function UserNavFallback() {
-  return <NavLink href="/signin" icon={<LogInIcon size={20} />} label="Log in" />;
+  return <NavLink href="/signin" icon={<LogInIcon size={20} />} label="Увійти" />;
 }

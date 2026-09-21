@@ -6,10 +6,7 @@ import NewEvent from '@/app/components/NewEvent';
 export default async function NewEventPage() {
   return (
     <div className="max-w-xl mx-auto p-4 md:p-8">
-      <Link
-        href="/dashboard"
-        className="inline-flex items-center text-sm text-gray-400 hover:text-gray-200 mb-6"
-      >
+      <Link href="/" className="inline-flex items-center text-sm text-gray-400 hover:text-gray-200 mb-6">
         <ArrowLeftIcon size={16} className="mr-1" />
         Назад
       </Link>

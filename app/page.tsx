@@ -1,9 +1,8 @@
 import { getEvents } from '@/lib/dal';
 import Link from 'next/link';
-import Button from '../components/ui/Button';
+import Button from './components/ui/Button';
 import { PlusIcon } from 'lucide-react';
 import { EVENT_CATEGORIES, EVENT_STATUSES } from '@/db/schema';
-import TimeAgo from '@/app/components/RelativeTime';
 import { format } from 'date-fns';
 import { uk } from 'date-fns/locale';
 
@@ -56,9 +55,7 @@ export default async function DashboardPage() {
                   <div className="col-span-2 text-sm text-gray-400">
                     {cat.icon} {cat.label}
                   </div>
-                  <div className={`col-span-2 text-sm font-medium ${statusColors[event.status]}`}>
-                    {st.label}
-                  </div>
+                  <div className={`col-span-2 text-sm font-medium ${statusColors[event.status]}`}>{st.label}</div>
                   <div className="col-span-3 text-sm text-gray-500">
                     {format(new Date(event.startDateTime), 'd MMM, HH:mm', { locale: uk })}
                   </div>

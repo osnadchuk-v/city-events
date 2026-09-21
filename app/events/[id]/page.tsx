@@ -49,7 +49,7 @@ const EventPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className="max-w-7xl w-full mr-auto ml-auto p-4 md:p-8">
       {/* Back */}
-      <Link href="/dashboard" className="inline-flex items-center text-sm text-gray-400 hover:text-gray-200 mb-6">
+      <Link href="/" className="inline-flex items-center text-sm text-gray-400 hover:text-gray-200 mb-6">
         <ArrowLeftIcon size={16} className="mr-1" />
         Назад
       </Link>
