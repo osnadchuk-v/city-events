@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { EventCategory } from '@/db/schema';
 
 const LocationSchema = z.object({
   type: z.enum(['physical', 'online', 'hybrid']),
@@ -23,22 +24,7 @@ const OrganizerSchema = z.object({
   url: z.url('Невірне посилання').optional().or(z.literal('')),
 });
 
-export const CATEGORIES = [
-  'concerts',
-  'theatre',
-  'exhibitions',
-  'cinema',
-  'parties',
-  'sports',
-  'family',
-  'education',
-  'business',
-  'food',
-  'activities',
-  'community',
-  'festivals',
-  'other',
-] as const;
+export const CATEGORIES = Object.values(EventCategory) as [EventCategory, ...EventCategory[]];
 
 export const EventSchema = z.object({
   title: z.string().min(3, 'Назва має бути не менше 3 символів').max(100, 'Назва має бути не більше 100 символів'),
@@ -49,6 +35,7 @@ export const EventSchema = z.object({
   timezone: z.string().default('Europe/Kyiv'),
   location: LocationSchema.optional(),
   imageUrl: z.url('Невірне посилання').optional().or(z.literal('')),
+  imagePath: z.string(),
   pricing: PricingSchema.optional(),
   ageLimit: z.number().int().min(0).max(21).optional(),
   organizer: OrganizerSchema.optional(),

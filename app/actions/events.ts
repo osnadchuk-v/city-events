@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm';
 import { getCurrentUser } from '@/lib/dal';
 import { updateTag } from 'next/cache';
 import { EventFormData, EventSchema } from '@/lib/validations';
+import { del } from '@vercel/blob';
 
 export type { EventFormData };
 
@@ -49,6 +50,7 @@ export async function createEvent(data: EventFormData): Promise<ActionResponse> 
         timezone: d.timezone,
         location: d.location ?? null,
         imageUrl: d.imageUrl || null,
+        imagePath: d.imagePath || null,
         pricing: d.pricing ?? null,
         ageLimit: d.ageLimit ?? null,
         organizer: d.organizer ?? null,
@@ -61,6 +63,11 @@ export async function createEvent(data: EventFormData): Promise<ActionResponse> 
     updateTag('events');
     return { success: true, message: 'Подію створено', eventId: created.id };
   } catch (error) {
+    if (data.imagePath && data.imageUrl) {
+      del(data.imagePath).then(() => {
+        console.log('Image deleted', data.imagePath);
+      });
+    }
     console.error('Error creating event:', error);
     return { success: false, message: 'Помилка при створенні події', error: 'Failed to create event' };
   }
@@ -104,6 +111,7 @@ export async function updateEvent(id: string, data: Partial<EventFormData>): Pro
     if (d.timezone !== undefined) patch.timezone = d.timezone;
     if (d.location !== undefined) patch.location = d.location;
     if (d.imageUrl !== undefined) patch.imageUrl = d.imageUrl || null;
+    if (d.imagePath !== undefined) patch.imagePath = d.imagePath || null;
     if (d.pricing !== undefined) patch.pricing = d.pricing;
     if (d.ageLimit !== undefined) patch.ageLimit = d.ageLimit;
     if (d.organizer !== undefined) patch.organizer = d.organizer;
@@ -135,6 +143,14 @@ export async function deleteEvent(id: string): Promise<ActionResponse> {
     }
     if (existing.createdBy !== user.id) {
       return { success: false, message: 'Недостатньо прав', error: 'Forbidden' };
+    }
+
+    if (existing.imagePath) {
+      try {
+        await del(existing.imagePath);
+      } catch (storageError) {
+        console.error('Error deleting image from storage:', storageError);
+      }
     }
 
     await db.delete(events).where(eq(events.id, id));

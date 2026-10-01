@@ -26,7 +26,7 @@ export default function DeleteIssueButton({ id }: DeleteIssueButtonProps) {
         }
 
         toast.success('Подію видалено');
-        router.push('/dashboard');
+        router.push('/');
         router.refresh();
       } catch (error) {
         toast.error('Помилка при видаленні');

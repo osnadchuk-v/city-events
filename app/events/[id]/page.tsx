@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Button from '@/app/components/ui/Button';
 import { ArrowLeftIcon, CalendarIcon, ClockIcon, Edit2Icon, LinkIcon, MapPinIcon } from 'lucide-react';
 import TimeAgo from '@/app/components/RelativeTime';
-import { EVENT_CATEGORIES, EVENT_STATUSES } from '@/db/schema';
+import { EVENT_CATEGORIES, EVENT_STATUSES, EventCategory } from '@/db/schema';
 import { EventLocation, EventOrganizer, EventPricing } from '@/lib/types';
 import { format } from 'date-fns';
 import { uk } from 'date-fns/locale';
@@ -33,7 +33,7 @@ const EventPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     user,
   } = event;
 
-  const categoryMeta = EVENT_CATEGORIES[category];
+  const categoryMeta = EVENT_CATEGORIES[category as EventCategory] || EVENT_CATEGORIES[EventCategory.OTHER];
   const statusMeta = EVENT_STATUSES[status];
   const loc = location as EventLocation | null;
   const price = pricing as EventPricing | null;

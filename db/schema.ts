@@ -1,41 +1,31 @@
 import { InferSelectModel, relations } from 'drizzle-orm';
-import {
-  boolean,
-  integer,
-  jsonb,
-  pgEnum,
-  pgTable,
-  real,
-  text,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { boolean, integer, jsonb, pgEnum, pgTable, real, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
 
-export const eventCategoryEnum = pgEnum('event_category', [
-  'concerts',
-  'theatre',
-  'exhibitions',
-  'cinema',
-  'parties',
-  'sports',
-  'family',
-  'education',
-  'business',
-  'food',
-  'activities',
-  'community',
-  'festivals',
-  'other',
-]);
+export enum EventCategory {
+  CONCERTS = 'concerts',
+  THEATRE = 'theatre',
+  EXHIBITIONS = 'exhibitions',
+  CINEMA = 'cinema',
+  PARTIES = 'parties',
+  SPORTS = 'sports',
+  FAMILY = 'family',
+  EDUCATION = 'education',
+  BUSINESS = 'business',
+  FOOD = 'food',
+  ACTIVITIES = 'activities',
+  COMMUNITY = 'community',
+  FESTIVALS = 'festivals',
+  OTHER = 'other',
+}
 
-export const eventStatusEnum = pgEnum('event_status', [
-  'active',
-  'cancelled',
-  'postponed',
-  'finished',
-]);
+export const eventCategoryEnum = pgEnum(
+  'event_category',
+  Object.values(EventCategory) as [EventCategory, ...EventCategory[]],
+);
+
+export const eventStatusEnum = pgEnum('event_status', ['active', 'cancelled', 'postponed', 'finished']);
 
 export const eventSourceEnum = pgEnum('event_source_type', ['ai', 'user']);
 
@@ -76,6 +66,7 @@ export const events = pgTable('events', {
   }>(),
 
   imageUrl: text('image_url'),
+  imagePath: text('image_path'),
 
   // Pricing as JSONB
   pricing: jsonb('pricing').$type<{
@@ -101,7 +92,9 @@ export const events = pgTable('events', {
   discoveredAt: timestamp('discovered_at'),
 
   // Relations
-  createdBy: text('created_by').notNull().references(() => users.id),
+  createdBy: text('created_by')
+    .notNull()
+    .references(() => users.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -151,22 +144,25 @@ export type User = InferSelectModel<typeof users>;
 
 // ─── Category metadata ────────────────────────────────────────────────────────
 
-export const EVENT_CATEGORIES = {
-  concerts: { label: 'Концерти', icon: '🎵', value: 'concerts' },
-  theatre: { label: 'Театр', icon: '🎭', value: 'theatre' },
-  exhibitions: { label: 'Виставки', icon: '🎨', value: 'exhibitions' },
-  cinema: { label: 'Кіно', icon: '🎬', value: 'cinema' },
-  parties: { label: 'Вечірки', icon: '🥳', value: 'parties' },
-  sports: { label: 'Спорт', icon: '⚽', value: 'sports' },
-  family: { label: 'Для сім\'ї', icon: '👨‍👩‍👧', value: 'family' },
-  education: { label: 'Освіта', icon: '🎓', value: 'education' },
-  business: { label: 'Бізнес', icon: '💼', value: 'business' },
-  food: { label: 'Їжа / гастрономія', icon: '🍔', value: 'food' },
-  activities: { label: 'Активності', icon: '🏃', value: 'activities' },
-  community: { label: 'Зустрічі / ком\'юніті', icon: '🧑‍🤝‍🧑', value: 'community' },
-  festivals: { label: 'Фестивалі', icon: '🎪', value: 'festivals' },
-  other: { label: 'Інше', icon: '📌', value: 'other' },
-} as const;
+export const EVENT_CATEGORIES: Record<
+  EventCategory,
+  { label: string; icon: string; value: EventCategory }
+> = {
+  [EventCategory.CONCERTS]: { label: 'Концерти', icon: '🎵', value: EventCategory.CONCERTS },
+  [EventCategory.THEATRE]: { label: 'Театр', icon: '🎭', value: EventCategory.THEATRE },
+  [EventCategory.EXHIBITIONS]: { label: 'Виставки', icon: '🎨', value: EventCategory.EXHIBITIONS },
+  [EventCategory.CINEMA]: { label: 'Кіно', icon: '🎬', value: EventCategory.CINEMA },
+  [EventCategory.PARTIES]: { label: 'Вечірки', icon: '🥳', value: EventCategory.PARTIES },
+  [EventCategory.SPORTS]: { label: 'Спорт', icon: '⚽', value: EventCategory.SPORTS },
+  [EventCategory.FAMILY]: { label: "Для сім'ї", icon: '👨‍👩‍👧', value: EventCategory.FAMILY },
+  [EventCategory.EDUCATION]: { label: 'Освіта', icon: '🎓', value: EventCategory.EDUCATION },
+  [EventCategory.BUSINESS]: { label: 'Бізнес', icon: '💼', value: EventCategory.BUSINESS },
+  [EventCategory.FOOD]: { label: 'Їжа / гастрономія', icon: '🍔', value: EventCategory.FOOD },
+  [EventCategory.ACTIVITIES]: { label: 'Активності', icon: '🏃', value: EventCategory.ACTIVITIES },
+  [EventCategory.COMMUNITY]: { label: "Зустрічі / ком'юніті", icon: '🧑‍🤝‍🧑', value: EventCategory.COMMUNITY },
+  [EventCategory.FESTIVALS]: { label: 'Фестивалі', icon: '🎪', value: EventCategory.FESTIVALS },
+  [EventCategory.OTHER]: { label: 'Інше', icon: '📌', value: EventCategory.OTHER },
+};
 
 export const EVENT_STATUSES = {
   active: { label: 'Активна', value: 'active' },

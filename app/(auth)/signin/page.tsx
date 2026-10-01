@@ -25,7 +25,7 @@ export default function SignInPage() {
 
         if (result.success) {
           toast.success('Account created successfully');
-          router.push('/dashboard');
+          router.push('/');
         }
 
         return result;
