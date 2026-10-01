@@ -1,4 +1,4 @@
-import { Event, EVENT_CATEGORIES, EVENT_STATUSES } from '@/db/schema';
+import { Event, EVENT_CATEGORIES, EVENT_STATUSES, EventCategory } from '@/db/schema';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/Card';
 import TimeAgo from '@/app/components/RelativeTime';
@@ -13,7 +13,7 @@ interface IssueCardProps {
 export default function IssueCard({ issue }: IssueCardProps) {
   const { id, title, description, status, category, createdAt, startDateTime, location } = issue;
 
-  const cat = EVENT_CATEGORIES[category];
+  const cat = EVENT_CATEGORIES[category as EventCategory] || EVENT_CATEGORIES[EventCategory.OTHER];
   const st = EVENT_STATUSES[status];
   const loc = location as EventLocation | null;
 

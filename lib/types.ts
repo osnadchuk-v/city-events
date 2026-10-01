@@ -1,4 +1,4 @@
-import { Event, EventSource, User } from '@/db/schema';
+import { Event, EventCategory, EventSource, User } from '@/db/schema';
 
 // ─── JSONB field types ────────────────────────────────────────────────────────
 
@@ -27,21 +27,7 @@ export interface EventOrganizer {
 
 // ─── Category / Status types ──────────────────────────────────────────────────
 
-export type EventCategory =
-  | 'concerts'
-  | 'theatre'
-  | 'exhibitions'
-  | 'cinema'
-  | 'parties'
-  | 'sports'
-  | 'family'
-  | 'education'
-  | 'business'
-  | 'food'
-  | 'activities'
-  | 'community'
-  | 'festivals'
-  | 'other';
+export { EventCategory };
 
 export type EventStatus = 'active' | 'cancelled' | 'postponed' | 'finished';
 export type EventSourceType = 'ai' | 'user';

@@ -26,8 +26,8 @@ describe('NavLink Component', () => {
     render(<NavLink href="/dashboard" label="Dashboard" icon={<span>Icon</span>} isActive={true} />);
 
     const link = screen.getByRole('link');
-    expect(link.className).toContain('bg-purple-100');
-    expect(link.className).toContain('text-purple-700');
+    expect(link.className).toContain('bg-gray-800');
+    expect(link.className).toContain('border-purple-500');
   });
 
   it('applies inactive styles when isActive is false', () => {

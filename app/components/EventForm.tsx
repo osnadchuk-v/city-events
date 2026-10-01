@@ -4,11 +4,11 @@ import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Event, EVENT_CATEGORIES } from '@/db/schema';
 import Button from './ui/Button';
-import { Form, FormError, FormGroup, FormInput, FormLabel, FormSelect, FormTextarea } from './ui/Form';
+import { Form, FormGroup, FormInput, FormLabel, FormSelect, FormTextarea } from './ui/Form';
 import { ActionResponse, createEvent, updateEvent } from '@/app/actions/events';
 import { EventLocation, EventPricing, LocationType, PricingType } from '@/lib/types';
-import type { EventFormData } from '@/lib/validations';
 import { format } from 'date-fns';
+import ImageField from '@/app/components/FileUploadInput';
 
 interface EventFormProps {
   event?: Event;
@@ -32,9 +32,7 @@ function FieldError({ errors, field }: { errors?: Record<string, string[]>; fiel
 // ─── Section heading ──────────────────────────────────────────────────────────
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider pt-2">{children}</h3>
-  );
+  return <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider pt-2">{children}</h3>;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -43,26 +41,17 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
   const router = useRouter();
 
   // Derive default date/time from event.startDateTime for controlled display
-  const defaultDate = event?.startDateTime
-    ? format(new Date(event.startDateTime), 'yyyy-MM-dd')
-    : '';
-  const defaultStartTime = event?.startDateTime
-    ? format(new Date(event.startDateTime), 'HH:mm')
-    : '';
-  const defaultEndTime = event?.endDateTime
-    ? format(new Date(event.endDateTime), 'HH:mm')
-    : '';
+  const defaultDate = event?.startDateTime ? format(new Date(event.startDateTime), 'yyyy-MM-dd') : '';
+  const defaultStartTime = event?.startDateTime ? format(new Date(event.startDateTime), 'HH:mm') : '';
+  const defaultEndTime = event?.endDateTime ? format(new Date(event.endDateTime), 'HH:mm') : '';
 
   // Local state drives conditional field rendering
   const existingLocation = event?.location as EventLocation | null | undefined;
   const existingPricing = event?.pricing as EventPricing | null | undefined;
 
-  const [locationType, setLocationType] = useState<LocationType>(
-    existingLocation?.type ?? 'physical',
-  );
-  const [pricingType, setPricingType] = useState<PricingType>(
-    existingPricing?.type ?? 'free',
-  );
+  const [locationType, setLocationType] = useState<LocationType>(existingLocation?.type ?? 'physical');
+  const [pricingType, setPricingType] = useState<PricingType>(existingPricing?.type ?? 'free');
+  const [imageData, setImageData] = useState<{ url: string | null; path: string | null }>({ url: null, path: null });
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
     async (_prev: ActionResponse, formData: FormData) => {
@@ -91,12 +80,8 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
         pricingType !== 'free'
           ? {
               type: pricingType,
-              min: formData.get('pricing.min')
-                ? Number(formData.get('pricing.min'))
-                : undefined,
-              max: formData.get('pricing.max')
-                ? Number(formData.get('pricing.max'))
-                : undefined,
+              min: formData.get('pricing.min') ? Number(formData.get('pricing.min')) : undefined,
+              max: formData.get('pricing.max') ? Number(formData.get('pricing.max')) : undefined,
               currency: 'UAH',
               ticketUrl: (formData.get('pricing.ticketUrl') as string) || undefined,
             }
@@ -121,7 +106,10 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
         endDateTime,
         timezone: 'Europe/Kyiv',
         location,
-        imageUrl: (formData.get('imageUrl') as string) || undefined,
+        // imageUrl: (formData.get('imageUrl') as string) || undefined,
+        imageUrl: formData.get('imageUrl') as string,
+        imagePath: formData.get('imagePath') as string,
+        image: formData.get('image') as File | undefined,
         pricing,
         ageLimit,
         organizer,
@@ -130,13 +118,11 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
       } as Parameters<typeof createEvent>[0];
 
       try {
-        const result = isEditing
-          ? await updateEvent(event!.id, data)
-          : await createEvent(data);
+        const result = isEditing ? await updateEvent(event!.id, data) : await createEvent(data);
 
         if (result.success) {
           router.refresh();
-          if (!isEditing) router.push('/dashboard');
+          if (!isEditing) router.push('/');
         }
 
         return result;
@@ -154,6 +140,10 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
     label: `${icon} ${label}`,
     value,
   }));
+
+  const handleImageChange = ({ url, path }: { url: string; path: string }) => {
+    setImageData({ url, path });
+  };
 
   return (
     <Form action={formAction}>
@@ -245,13 +235,7 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
         </FormGroup>
         <FormGroup>
           <FormLabel htmlFor="endTime">Кінець</FormLabel>
-          <FormInput
-            id="endTime"
-            name="endTime"
-            type="time"
-            defaultValue={defaultEndTime}
-            disabled={isPending}
-          />
+          <FormInput id="endTime" name="endTime" type="time" defaultValue={defaultEndTime} disabled={isPending} />
         </FormGroup>
       </div>
 
@@ -272,9 +256,7 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
             type="button"
             onClick={() => setLocationType(value)}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-              locationType === value
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              locationType === value ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
             }`}
           >
             {label}
@@ -348,9 +330,7 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
             type="button"
             onClick={() => setPricingType(value)}
             className={`py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-              pricingType === value
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              pricingType === value ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
             }`}
           >
             {label}
@@ -409,37 +389,16 @@ export default function EventForm({ event, userId, isEditing = false }: EventFor
           id="organizer.name"
           name="organizer.name"
           placeholder="Назва організатора"
-          defaultValue={
-            event?.organizer
-              ? (event.organizer as { name: string }).name
-              : ''
-          }
+          defaultValue={event?.organizer ? (event.organizer as { name: string }).name : ''}
           disabled={isPending}
         />
       </FormGroup>
 
       <FormGroup>
-        <FormLabel htmlFor="imageUrl">Зображення (URL)</FormLabel>
-        <FormInput
-          id="imageUrl"
-          name="imageUrl"
-          type="url"
-          placeholder="https://..."
-          defaultValue={event?.imageUrl ?? ''}
-          disabled={isPending}
-        />
-      </FormGroup>
-
-      <FormGroup>
-        <FormLabel htmlFor="sourceUrl">Посилання на подію</FormLabel>
-        <FormInput
-          id="sourceUrl"
-          name="sourceUrl"
-          type="url"
-          placeholder="https://..."
-          defaultValue={event?.sourceUrl ?? ''}
-          disabled={isPending}
-        />
+        <FormLabel htmlFor="image">Зображення</FormLabel>
+        <ImageField id="image" name="image" accept="image/*" disabled={isPending} onChange={handleImageChange} />
+        <input name="imageUrl" value={imageData.url || ''} className="hidden" onChange={() => {}} />
+        <input name="imagePath" value={imageData.path || ''} className="hidden" onChange={() => {}} />
       </FormGroup>
 
       <FormGroup>

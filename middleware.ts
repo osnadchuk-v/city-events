@@ -1,11 +1,13 @@
-// middleware.ts
-import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export const middleware = async (request: NextRequest) => {
+  if (request.nextUrl.pathname.startsWith('/api/upload')) {
+    return NextResponse.next()
+  }
+
   if (request.nextUrl.pathname.startsWith('/api')) {
-    const authHeader = (await headers()).get('Authorization')
+    const authHeader = request.headers.get('Authorization')
 
     if (!authHeader) {
       return NextResponse.json(
